@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تصميم عصري متقدم</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <style>
+       /* استيراد الخط */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+/* إعادة تعيين أساسية */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* متغيرات الألوان والانتقالات */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #e74c3c;
+  --accent-color: #f1c40f;
+  --dark-color: #2c3e50;
+  --light-color: #ecf0f1;
+  --panel-bg-color: #1f2933; /* لون خلفية اللوحة الجانبية */
+  --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --section-color-rgb: 52, 152, 219;
+}
+
+/* تنسيقات أساسية لـ html و body */
+html, body {
+  font-family: 'Tajawal', sans-serif;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+body {
+  height: 100%;
+  cursor: none;
+}
+
+/* مؤشر الماوس المخصص */
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, scale 0.2s ease, background-color 0.2s ease;
+}
+
+.cursor-follower {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease, scale 0.3s ease;
+}
+
+/* القائمة العلوية */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 30px 40px;
+  display: flex;
+  /* تغيير لتبرير المحتوى بشكل أفضل مع أيقونة البرجر */
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  transition: padding var(--transition-normal), background-color var(--transition-normal), backdrop-filter var(--transition-normal);
+  mix-blend-mode: difference;
+}
+
+.navbar.scrolled {
+  padding: 15px 40px;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: clamp(20px, 3vw, 24px); /* حجم متجاوب للشعار */
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -1px;
+  /* إضافة هامش لليسار لإعطاء مساحة لأيقونة البرجر في RTL */
+  margin-left: 50px;
+  /* للشاشات الكبيرة جدًا، أعد الهامش لليمين */
+  /* margin-right: 0; */
+}
+
+.nav-links {
+  display: flex;
+  gap: clamp(20px, 4vw, 40px); /* تباعد متجاوب */
+}
+
+.nav-link {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  position: relative;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* أيقونة البرجر للقائمة الجانبية */
+.burger-menu {
+  display: none; /* مخفي افتراضيًا */
+  position: absolute; /* تحديد الموضع بالنسبة للشريط العلوي */
+  left: 40px; /* الموضع لـ RTL */
+  /* right: 40px; */ /* الموضع لـ LTR */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 25px;
+  background: none;
+  border: none;
+  cursor: pointer; /* سيتم إخفاؤه */
+  z-index: 1001; /* فوق الشعار */
+  padding: 0; /* إزالة الحشو الافتراضي للزر */
+}
+
+.burger-menu span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  margin: 6px 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- اللوحة الجانبية وتوابعها --- */
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: 0; /* يبدأ من اليمين لـ RTL */
+  width: clamp(280px, 70vw, 350px); /* عرض متجاوب */
+  height: 100%;
+  background-color: var(--panel-bg-color);
+  z-index: 1100; /* أعلى من الشريط العلوي والتراكب */
+  transform: translateX(100%); /* إخفاء اللوحة إلى اليمين */
+  /* transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1); */ /* الانتقال سيتم عبر GSAP */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+  visibility: hidden; /* إخفاء مبدئي لتحسين الأداء */
+}
+
+.side-panel.active {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.close-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px; /* لـ RTL */
+  /* right: 20px; */ /* لـ LTR */
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 35px;
+  font-weight: 300;
+  cursor: pointer; /* سيتم إخفاؤه */
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.close-panel:hover {
+  opacity: 1;
+}
+
+.side-panel-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.side-panel-link {
+  font-size: 20px; /* حجم أكبر للمس */
+  font-weight: 500;
+  color: var(--light-color);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 8px;
+  transition: color var(--transition-fast);
+}
+
+.side-panel-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0; /* يظل right لأنه يعتمد على النص */
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width var(--transition-fast);
+}
+
+.side-panel-link:hover {
+  color: var(--primary-color);
+}
+
+.side-panel-link:hover::after {
+  width: 100%;
+}
+
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* زيادة التعتيم قليلاً */
+  z-index: 1099; /* تحت اللوحة الجانبية وفوق المحتوى */
+  opacity: 0;
+  pointer-events: none; /* لا يتفاعل مع الماوس وهو مخفي */
+  transition: opacity 0.5s ease; /* الانتقال سيتم عبر GSAP */
+  visibility: hidden;
+}
+
+.panel-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* --- نهاية اللوحة الجانبية --- */
+
+/* الحاوية الرئيسية */
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* قسم الصفحة */
+.section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.section-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* خلفية القسم */
+.bg-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  filter: brightness(0.5) contrast(1.2);
+  transform: scale(1.1);
+  transition: transform 2s ease;
+}
+
+.section:hover .bg-image {
+  transform: scale(1);
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 2;
+}
+
+.bg-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 3;
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 4;
+}
+
+/* قسم المحتوى */
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 1100px;
+  width: 90%; /* استخدام عرض نسبي للمرونة */
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 40px); /* حشو متجاوب */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* ضمان التوسيط الأفقي */
+  text-align: center;
+}
+
+.content-inner {
+  overflow: hidden;
+  width: 100%; /* ضمان شغل العرض المتاح */
+}
+
+.subtitle {
+  font-size: clamp(16px, 2.5vw, 18px); /* حجم خط متجاوب */
+  font-weight: 500;
+  margin-bottom: 15px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.title {
+  /* استخدام clamp لحجم خط مرن جداً */
+  font-size: clamp(2.5rem, 8vw, 5rem); /* 40px -> 80px */
+  line-height: 1.1;
+  font-weight: 900;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem); /* تباعد متجاوب */
+  color: #fff;
+  overflow: hidden;
+}
+
+.title span {
+  display: block;
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.description {
+  max-width: 650px; /* حد أقصى للعرض */
+  width: 100%; /* شغل العرض المتاح */
+  margin: 0 auto clamp(2rem, 5vw, 2.5rem) auto; /* تباعد متجاوب */
+  /* استخدام clamp لحجم خط مرن */
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* ~14.4px -> 17.6px */
+  line-height: 1.7; /* زيادة طفيفة لتحسين القراءة */
+  color: rgba(255, 255, 255, 0.85);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* الأزرار */
+.button-group {
+  display: flex;
+  flex-wrap: wrap; /* السماح بالالتفاف في الشاشات الضيقة جدًا */
+  justify-content: center;
+  gap: 15px clamp(15px, 3vw, 20px); /* تباعد متجاوب */
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.button {
+  position: relative;
+  padding: clamp(10px, 2.5vw, 12px) clamp(25px, 5vw, 32px); /* حشو متجاوب */
+  font-size: clamp(14px, 2.5vw, 16px); /* حجم خط متجاوب */
+  font-weight: 500;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.button-primary {
+  background-color: var(--primary-color);
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  background-color: #2980b9;
+}
+
+.button-outline {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.button-outline:hover {
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* رسومات متحركة دائرية */
+.circle-decoration {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 5;
+  pointer-events: none;
+  /* إضافة تأثير parallax خفيف إذا أردت لاحقًا عبر JS */
+}
+
+.circle-1 {
+  top: -10%;
+  right: 5%;
+  width: clamp(200px, 30vw, 300px);
+  height: clamp(200px, 30vw, 300px);
+  animation: rotate 60s linear infinite;
+}
+
+.circle-2 {
+  bottom: -15%;
+  left: 8%;
+  width: clamp(300px, 45vw, 500px);
+  height: clamp(300px, 45vw, 500px);
+  animation: rotate 80s linear infinite reverse;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* شريط التمرير الجانبي */
+.scroll-indicator {
+  position: fixed;
+  top: 50%;
+  right: clamp(20px, 4vw, 40px); /* مسافة متجاوبة */
+  transform: translateY(-50%);
+  z-index: 50;
+}
+
+.scroll-dots {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(15px, 3vh, 20px); /* تباعد متجاوب */
+  align-items: flex-end;
+}
+
+.scroll-dot {
+  width: 10px; /* تصغير طفيف للنقاط */
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: var(--transition-fast) ease;
+  position: relative;
+  /* متغير لتلوين النقطة النشطة */
+  --dot-active-color: var(--primary-color);
+}
+
+.scroll-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0); /* تبدأ مخفية */
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--dot-active-color); /* استخدام المتغير اللوني */
+  opacity: 1;
+  transition: transform var(--transition-fast) ease, background-color var(--transition-fast) ease;
+}
+
+.scroll-dot:hover {
+  transform: scale(1.2);
+}
+
+.scroll-dot.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.scroll-dot.active::before {
+  transform: translate(-50%, -50%) scale(1); /* إظهار النواة */
+}
+
+.scroll-dot-label {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+
+.scroll-dot:hover .scroll-dot-label {
+  opacity: 1;
+  transform: translate(5px, -50%); /* إزاحة طفيفة عند التحويم */
+}
+
+/* مؤشر للتمرير للأسفل */
+.scroll-down {
+  position: absolute;
+  bottom: clamp(20px, 5vh, 40px); /* مسافة سفلية متجاوبة */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 50;
+  color: #fff;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.scroll-down:hover {
+  transform: translate(-50%, 5px);
+}
+
+.scroll-down span {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.scroll-down-icon {
+  width: 20px;
+  height: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  position: relative;
+}
+
+.scroll-down-icon::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #fff;
+  animation: scrollAnim 2s infinite;
+}
+
+@keyframes scrollAnim {
+  0% { top: 6px; opacity: 1; }
+  100% { top: 20px; opacity: 0; }
+}
+
+/* عناصر الأشكال العائمة المتحركة */
+.floating-shape {
+  position: absolute;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  z-index: 2;
+  opacity: 0.5;
+  filter: blur(60px);
+  pointer-events: none;
+  /* حجم متجاوب */
+  width: clamp(200px, 30vw, 400px);
+  height: clamp(200px, 30vw, 400px);
+}
+
+.shape-1 {
+  top: 15%;
+  right: 10%;
+  width: clamp(200px, 25vw, 300px); /* أصغر قليلاً */
+  height: clamp(200px, 25vw, 300px);
+  background-color: var(--primary-color);
+  animation: floatAnim 18s ease-in-out infinite alternate;
+}
+
+.shape-2 {
+  bottom: 10%;
+  left: 12%;
+  width: clamp(250px, 35vw, 400px); /* أكبر قليلاً */
+  height: clamp(250px, 35vw, 400px);
+  background-color: var(--secondary-color);
+  animation: floatAnim 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatAnim {
+  0% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+  50% { transform: translateY(-25px) translateX(15px) rotate(10deg) scale(1.03); }
+  100% { transform: translateY(15px) translateX(-10px) rotate(-8deg) scale(0.97); }
+}
+
+/* لوحة الألوان وتطبيقها */
+.section:nth-child(1) { --section-color: var(--primary-color); }
+.section:nth-child(2) { --section-color: var(--secondary-color); }
+.section:nth-child(3) { --section-color: var(--accent-color); }
+
+/* تطبيق لون القسم على العناصر الفرعية */
+.section:nth-child(1) .subtitle { color: var(--primary-color); }
+.section:nth-child(1) .button-primary { background-color: var(--primary-color); }
+.section:nth-child(1) .nav-link:hover::after { background-color: var(--primary-color); }
+.section:nth-child(1) .scroll-dot { --dot-active-color: var(--primary-color); }
+.section:nth-child(1) .floating-shape.shape-1 { background-color: var(--primary-color); }
+.section:nth-child(1) .floating-shape.shape-2 { background-color: var(--secondary-color); }
+
+.section:nth-child(2) .subtitle { color: var(--secondary-color); }
+.section:nth-child(2) .button-primary { background-color: var(--secondary-color); }
+.section:nth-child(2) .nav-link:hover::after { background-color: var(--secondary-color); }
+.section:nth-child(2) .scroll-dot { --dot-active-color: var(--secondary-color); }
+.section:nth-child(2) .floating-shape.shape-1 { background-color: var(--secondary-color); }
+.section:nth-child(2) .floating-shape.shape-2 { background-color: var(--accent-color); }
+
+.section:nth-child(3) .subtitle { color: var(--accent-color); }
+.section:nth-child(3) .button-primary { background-color: var(--accent-color); color: var(--dark-color); }
+.section:nth-child(3) .button-primary:hover { background-color: #dab10d; }
+.section:nth-child(3) .nav-link:hover::after { background-color: var(--accent-color); }
+.section:nth-child(3) .scroll-dot { --dot-active-color: var(--accent-color); }
+.section:nth-child(3) .floating-shape.shape-1 { background-color: var(--accent-color); }
+.section:nth-child(3) .floating-shape.shape-2 { background-color: var(--primary-color); }
+
+/* قسم الرسومات الإبداعية */
+.creative-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.creative-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* عنصر Canvas للجسيمات */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* التأثير الضوئي المتتبع للماوس */
+.glow-effect {
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(var(--section-color-rgb), 0.4) 0%, rgba(var(--section-color-rgb), 0) 70%);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: none; /* إخفاء مؤقت لتجنب المشاكل */
+}
+@media (pointer: fine) { /* إظهار فقط للأجهزة ذات المؤشر الدقيق */
+    .glow-effect {
+        display: block;
+    }
+}
+
+
+/* --- تحسينات التجاوب الإضافية --- */
+
+/* شاشات أكبر (قد لا تحتاج لتغييرات كثيرة هنا) */
+@media screen and (min-width: 1201px) {
+  .title {
+      font-size: 5rem; /* 80px */
+  }
+  .description {
+      font-size: 1.1rem; /* 17.6px */
+  }
+}
+
+/* شاشات التابلت وما أصغر */
+@media screen and (max-width: 992px) {
+  .content {
+      max-width: 90%; /* تقليل العرض الأقصى قليلاً */
+  }
+  .scroll-indicator {
+    right: clamp(15px, 3vw, 30px); /* تقريب المؤشر الجانبي */
+  }
+  .scroll-dot-label {
+    display: none; /* إخفاء النصوص بجانب النقاط للتابلت أيضًا */
+  }
+}
+
+/* شاشات الهواتف (نقطة التوقف الأصلية مع التعديلات) */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 20px;
+  }
+
+  .navbar.scrolled {
+    padding: 15px 20px;
+  }
+
+  .logo {
+      margin-left: 0; /* إزالة الهامش الإضافي عند إخفاء الروابط */
+      /* يمكن تعديل حجم الشعار أكثر هنا إذا لزم الأمر */
+  }
+
+  /* إخفاء روابط الشريط العلوي وإظهار أيقونة البرجر */
+  .nav-links {
+    display: none;
+  }
+  .burger-menu {
+    display: block; /* إظهار أيقونة البرجر */
+  }
+
+  /* تعديلات على حجم الخط والتباعد للمحتوى الرئيسي */
+  .subtitle {
+      font-size: clamp(14px, 4vw, 16px);
+  }
+  .description {
+    line-height: 1.6;
+  }
+
+  .button-group {
+    flex-direction: column; /* الأزرار تحت بعضها */
+    gap: 15px;
+    align-items: center; /* توسيط الأزرار */
+    width: 100%; /* شغل كامل العرض المتاح */
+  }
+
+  .button {
+    width: 80%; /* عرض الأزرار */
+    max-width: 300px; /* حد أقصى للعرض */
+    padding: 12px 20px; /* تعديل الحشو */
+    font-size: 15px; /* تصغير طفيف للخط */
+  }
+
+  /* تصغير حجم الأشكال الزخرفية أكثر */
+  .floating-shape {
+    width: clamp(150px, 40vw, 250px);
+    height: clamp(150px, 40vw, 250px);
+    filter: blur(50px); /* تقليل التمويه */
+    opacity: 0.4; /* تقليل الشفافية */
+  }
+  .circle-decoration {
+      opacity: 0.5; /* تقليل شفافية الدوائر */
+      width: clamp(150px, 25vw, 200px);
+      height: clamp(150px, 25vw, 200px);
+  }
+  .circle-1 { top: -5%; right: 2%; }
+  .circle-2 { bottom: -8%; left: 5%; }
+
+  /* إخفاء بعض العناصر الأقل أهمية في الشاشات الصغيرة جدًا إذا لزم الأمر */
+  @media screen and (max-width: 480px) {
+      .scroll-indicator {
+          display: none; /* إخفاء مؤشر التمرير الجانبي */
+      }
+      .creative-line, .creative-dot {
+          display: none; /* إخفاء الخط والنقاط الزخرفية */
+      }
+      .title {
+          font-size: clamp(2rem, 10vw, 2.8rem); /* تصغير العنوان أكثر */
+      }
+      .description {
+           font-size: clamp(0.85rem, 4vw, 0.95rem); /* تصغير الوصف أكثر */
+      }
+      .button {
+          width: 90%;
+      }
+  }
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <nav class="navbar">
+    <button class="burger-menu" aria-label="فتح القائمة">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="logo">إبداع</div>
+    <div class="nav-links">
+      <a href="#section1" class="nav-link">الرئيسية</a>
+      <a href="#section2" class="nav-link">خدماتنا</a>
+      <a href="#section3" class="nav-link">أعمالنا</a>
+    </div>
+  </nav>
+
+  <div class="side-panel">
+    <button class="close-panel" aria-label="إغلاق القائمة">&times;</button>
+    <div class="side-panel-links">
+      <a href="#section1" class="side-panel-link">الرئيسية</a>
+      <a href="#section2" class="side-panel-link">خدماتنا</a>
+      <a href="#section3" class="side-panel-link">أعمالنا</a>
+      </div>
+  </div>
+  <div class="panel-overlay"></div>
+
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="glow-effect"></div>
+
+  <div class="container">
+    <section id="section1" class="section active">
+      <div class="section-inner">
+        <div class="bg-wrapper">
+          <img src="https://picsum.photos/1200/800?random=1" alt="خلفية أولى" class="bg-image">
+          <div class="bg-overlay"></div>
+          <div class="grid-overlay"></div>
+        </div>
+        <div class="circle-decoration circle-1"></div>
+        <div class="circle-decoration circle-2"></div>
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="creative-line"></div>
+        <div class="creative-dot" style="left: 25%"></div>
+        <div class="creative-dot" style="left: 45%"></div>
+        <div class="creative-dot" style="left: 65%"></div>
+        <div class="creative-dot" style="left: 85%"></div>
+        <div class="content">
+          <div class="content-inner">
+            <div class="subtitle">نرحب بكم في عالم الإبداع</div>
+            <h1 class="title">
+              <span>تصميم ابداعي</span>
+              <span>بدون حدود</span>
+            </h1>
+            <p class="description">
+              أطلق العنان لإبداعك مع تصميم عصري يجمع بين الأناقة والوظائف المتقدمة. نحن نساعدك لإنشاء هوية بصرية فريدة تعكس رؤيتك وتحقق أهدافك.
+            </p>
+            <div class="button-group">
+              <a href="#" class="button button-primary">ابدأ الآن</a>
+              <a href="#" class="button button-outline">اكتشف المزيد</a>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-down">
+          <span>اكتشف المزيد</span>
+          <div class="scroll-down-icon"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section2" class="section">
+        <div class="section-inner">
+          <div class="bg-wrapper">
+            <img src="https://picsum.photos/1200/800?random=2" alt="خلفية ثانية" class="bg-image">
+            <div class="bg-overlay"></div>
+            <div class="grid-overlay"></div>
+          </div>
+          <div class="circle-decoration circle-1"></div>
+          <div class="circle-decoration circle-2"></div>
+          <div class="floating-shape shape-1"></div>
+          <div class="floating-shape shape-2"></div>
+          <div class="creative-line"></div>
+          <div class="creative-dot" style="left: 15%"></div>
+          <div class="creative-dot" style="left: 35%"></div>
+          <div class="creative-dot" style="left: 55%"></div>
+          <div class="creative-dot" style="left: 75%"></div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="subtitle">خدماتنا المتميزة</div>
+              <h1 class="title">
+                <span>تجربة مستخدم</span>
+                <span>لا مثيل لها</span>
+              </h1>
+              <p class="description">
+                نقدم لك تجربة تفاعلية فريدة تجمع بين التصميم العصري وأحدث التقنيات. نركز على تجربة المستخدم لنضمن تميز مشروعك وسهولة استخدامه.
+              </p>
+              <div class="button-group">
+                <a href="#" class="button button-primary">استكشف خدماتنا</a>
+                <a href="#" class="button button-outline">تواصل معنا</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section3" class="section">
+        <div class="section-inner">
+          <div class="bg-wrapper">
+            <img src="https://picsum.photos/1200/800?random=3" alt="خلفية ثالثة" class="bg-image">
+            <div class="bg-overlay"></div>
+            <div class="grid-overlay"></div>
+          </div>
+          <div class="circle-decoration circle-1"></div>
+          <div class="circle-decoration circle-2"></div>
+          <div class="floating-shape shape-1"></div>
+          <div class="floating-shape shape-2"></div>
+          <div class="creative-line"></div>
+          <div class="creative-dot" style="left: 20%"></div>
+          <div class="creative-dot" style="left: 40%"></div>
+          <div class="creative-dot" style="left: 60%"></div>
+          <div class="creative-dot" style="left: 80%"></div>
+          <div class="content">
+            <div class="content-inner">
+              <div class="subtitle">أعمالنا المميزة</div>
+              <h1 class="title">
+                <span>إبداع يتحدث</span>
+                <span>عن نفسه</span>
+              </h1>
+              <p class="description">
+                استعرض مجموعة متنوعة من مشاريعنا التي نفذناها بكل احترافية ودقة. كل مشروع يعكس التزامنا بالجودة والتميز لإرضاء عملائنا.
+              </p>
+              <div class="button-group">
+                <a href="#" class="button button-primary">عرض الأعمال</a>
+                <a href="#" class="button button-outline">طلب عرض سعر</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-dots">
+      <div class="scroll-dot active" data-section="section1">
+        <span class="scroll-dot-label">الرئيسية</span>
+      </div>
+      <div class="scroll-dot" data-section="section2">
+        <span class="scroll-dot-label">خدماتنا</span>
+      </div>
+      <div class="scroll-dot" data-section="section3">
+        <span class="scroll-dot-label">أعمالنا</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  // تسجيل الإضافات المستخدمة
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+  // --- إعدادات عامة ---
+  const sections = gsap.utils.toArray('.section');
+  const scrollDots = gsap.utils.toArray('.scroll-dot');
+  const navLinks = gsap.utils.toArray('.nav-link');
+  const cursor = document.querySelector('.cursor');
+  const cursorFollower = document.querySelector('.cursor-follower');
+  const glowEffect = document.querySelector('.glow-effect');
+  const navbar = document.querySelector('.navbar');
+  let activeSectionIndex = 0;
+
+  // --- عناصر اللوحة الجانبية ---
+  const burgerMenu = document.querySelector('.burger-menu');
+  const sidePanel = document.querySelector('.side-panel');
+  const closePanelBtn = document.querySelector('.close-panel');
+  const panelOverlay = document.querySelector('.panel-overlay');
+  const sidePanelLinks = gsap.utils.toArray('.side-panel-link');
+
+  // --- مؤشر الماوس المخصص والتأثير الضوئي ---
+  let mouseX = 0, mouseY = 0;
+  let glowX = 0, glowY = 0;
+  let isGlowVisible = false; // لتتبع حالة ظهور الوهج
+
+  // استخدام requestAnimationFrame لتحريك المؤشر والوهج بسلاسة
+  function updateCursorAndGlow() {
+    gsap.set(cursor, { x: mouseX, y: mouseY });
+    gsap.to(cursorFollower, { x: mouseX, y: mouseY, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+
+    if (isGlowVisible) { // تحريك الوهج فقط إذا كان مرئيًا
+        glowX += (mouseX - glowX) * 0.1;
+        glowY += (mouseY - glowY) * 0.1;
+        gsap.set(glowEffect, { x: glowX, y: glowY });
+    }
+    requestAnimationFrame(updateCursorAndGlow);
+  }
+
+  // بدء حلقة التحريك
+  requestAnimationFrame(updateCursorAndGlow);
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    // إظهار الوهج عند أول حركة للماوس (إذا كان الجهاز يدعم المؤشر)
+    if (!isGlowVisible && window.matchMedia('(pointer: fine)').matches) {
+        gsap.to(glowEffect, { opacity: 1, duration: 0.5 });
+        isGlowVisible = true;
+    }
+  });
+
+
+  // --- وظائف فتح/إغلاق اللوحة الجانبية ---
+  const panelTimeline = gsap.timeline({ paused: true, reversed: true });
+
+  panelTimeline
+    .to(panelOverlay, { opacity: 1, duration: 0.3, ease: 'power1.inOut', onStart: () => panelOverlay.style.visibility = 'visible' })
+    .to(sidePanel, { x: 0, duration: 0.5, ease: 'power3.out', onStart: () => sidePanel.style.visibility = 'visible' }, "-=0.2"); // يبدأ قبل انتهاء التراكب
+
+  function openPanel() {
+    panelTimeline.play();
+    burgerMenu.classList.add('active'); // تغيير شكل أيقونة البرجر (اختياري)
+  }
+
+  function closePanel() {
+    panelTimeline.reverse().then(() => { // استخدام .then لضمان إخفاء العناصر بعد انتهاء الأنيميشن
+        panelOverlay.style.visibility = 'hidden';
+        sidePanel.style.visibility = 'hidden';
+    });
+    burgerMenu.classList.remove('active'); // إعادة شكل أيقونة البرجر
+  }
+
+  // ربط الأحداث
+  if (burgerMenu) {
+    burgerMenu.addEventListener('click', openPanel);
+  }
+  if (closePanelBtn) {
+    closePanelBtn.addEventListener('click', closePanel);
+  }
+  if (panelOverlay) {
+    panelOverlay.addEventListener('click', closePanel);
+  }
+
+  // إغلاق اللوحة عند النقر على رابط بداخلها والانتقال للقسم
+  sidePanelLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      closePanel(); // أغلق اللوحة أولاً
+      const targetId = link.getAttribute('href');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        const index = sections.indexOf(targetSection);
+        // تأخير بسيط للتمرير بعد إغلاق اللوحة
+        gsap.delayedCall(panelTimeline.duration() * 0.8, () => { // انتظر معظم مدة إغلاق اللوحة
+            scrollToSection(index);
+        });
+      }
+    });
+  });
+
+
+  // --- تهيئة ScrollTrigger وتحديث القسم النشط ---
+  sections.forEach((section, index) => {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top center+=10%',
+      end: 'bottom center-=10%',
+      // markers: true,
+      onEnter: () => updateActiveSection(index),
+      onEnterBack: () => updateActiveSection(index),
+    });
+  });
+
+  // دالة لتحديث القسم النشط وتأثيراته
+  function updateActiveSection(index) {
+    if (activeSectionIndex === index) return;
+    activeSectionIndex = index;
+
+    sections.forEach((s, i) => s.classList.toggle('active', i === index));
+
+    // تحديث نقاط التمرير الجانبية وتلوينها
+    scrollDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+      if (i === index) {
+        const activeColor = getComputedStyle(sections[index]).getPropertyValue('--section-color').trim();
+        dot.style.setProperty('--dot-active-color', activeColor);
+      }
+    });
+
+    // تحديث لون التأثير الضوئي ومتغير CSS
+    const activeSectionColor = getComputedStyle(sections[index]).getPropertyValue('--section-color').trim();
+    const rgbColor = gsap.utils.splitColor(activeSectionColor, true);
+
+    if (rgbColor) {
+      const rgbString = `${rgbColor[0]}, ${rgbColor[1]}, ${rgbColor[2]}`;
+      document.documentElement.style.setProperty('--section-color-rgb', rgbString);
+    }
+
+    animateSectionElements(sections[index]);
+  }
+
+  // دالة لتحريك عناصر القسم
+  function animateSectionElements(section, reverse = false) {
+    const subtitle = section.querySelector('.subtitle');
+    const titleSpans = section.querySelectorAll('.title span');
+    const description = section.querySelector('.description');
+    const buttons = section.querySelector('.button-group');
+    // تحديد العناصر للتحريك (تجنب خطأ إذا كان عنصر غير موجود)
+    const elementsToAnimate = [subtitle, description, buttons].filter(Boolean); // استبعاد null/undefined
+    const titleSpansArray = Array.from(titleSpans);
+
+    // تحريك العناصر الأساسية
+    gsap.fromTo(elementsToAnimate,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        delay: 0.2,
+        overwrite: true
+      }
+    );
+
+    // تحريك عنوان الـ span بشكل منفصل
+     if (titleSpansArray.length > 0) {
+         gsap.fromTo(titleSpansArray,
+             { y: '100%', opacity: 0 },
+             {
+                 y: '0%',
+                 opacity: 1,
+                 duration: 1,
+                 stagger: 0.1,
+                 ease: 'power3.out',
+                 delay: 0.3, // تأخير أكبر قليلاً للعنوان
+                 overwrite: true
+             }
+         );
+     }
+  }
+
+  // --- التمرير عند النقر على نقاط التمرير وروابط القائمة الرئيسية ---
+  scrollDots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      scrollToSection(index);
+    });
+  });
+
+  // تعديل ليشمل فقط الروابط في الشريط العلوي الرئيسي
+  document.querySelectorAll('.navbar .nav-links .nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        const index = sections.indexOf(targetSection);
+        scrollToSection(index);
+      }
+    });
+  });
+
+  // دالة التمرير باستخدام GSAP ScrollToPlugin
+  function scrollToSection(index) {
+    if (index >= 0 && index < sections.length) {
+        gsap.to(window, {
+          scrollTo: {
+            y: sections[index],
+            offsetY: 0
+          },
+          duration: 1.2,
+          ease: 'power2.inOut'
+        });
+    }
+  }
+
+  // --- تأثيرات التحويم (Hover) للمؤشر ---
+  document.querySelectorAll('a, button, .scroll-dot, .scroll-down').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(pointer: fine)').matches) { // تطبيق فقط للأجهزة بمؤشر
+            gsap.to(cursor, { scale: 1.6, backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.2 });
+            gsap.to(cursorFollower, { scale: 0.7, borderColor: 'rgba(255, 255, 255, 0.6)', duration: 0.3 });
+        }
+    });
+
+    element.addEventListener('mouseleave', () => {
+        if (window.matchMedia('(pointer: fine)').matches) {
+            gsap.to(cursor, { scale: 1, backgroundColor: 'white', duration: 0.2 });
+            gsap.to(cursorFollower, { scale: 1, borderColor: 'rgba(255, 255, 255, 0.3)', duration: 0.3 });
+        }
+    });
+  });
+
+
+  // --- تأثير تغيير شكل القائمة العلوية عند التمرير ---
+  ScrollTrigger.create({
+    start: 'top -80',
+    end: 99999,
+    toggleClass: { className: 'scrolled', targets: navbar }
+  });
+
+  // --- تأثير حركة الجسيمات (Particles) على Canvas 2D ---
+  const canvas = document.getElementById('particle-canvas');
+  // التحقق من وجود Canvas قبل محاولة الحصول على السياق
+  if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let particleArray = [];
+
+      function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.size = Math.random() * 2 + 1;
+          this.alpha = Math.random() * 0.5 + 0.1;
+          this.velocity = {
+              x: (Math.random() - 0.5) * 0.5,
+              y: (Math.random() - 0.5) * 0.5
+          };
+        }
+
+        draw() {
+          if (!ctx) return; // التأكد من وجود السياق
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        update() {
+          this.x += this.velocity.x;
+          this.y += this.velocity.y;
+
+          if (this.x < -50 || this.x > canvas.width + 50 || this.y < -50 || this.y > canvas.height + 50) {
+               if (Math.random() > 0.5) {
+                   this.x = Math.random() > 0.5 ? -50 : canvas.width + 50;
+                   this.y = Math.random() * canvas.height;
+               } else {
+                   this.x = Math.random() * canvas.width;
+                   this.y = Math.random() > 0.5 ? -50 : canvas.height + 50;
+               }
+               this.velocity.x = (Math.random() - 0.5) * 0.5;
+               this.velocity.y = (Math.random() - 0.5) * 0.5;
+          }
+          this.draw();
+        }
+      }
+
+      function initParticles() {
+        particleArray = [];
+        let numberOfParticles = 100;
+        for (let i = 0; i < numberOfParticles; i++){
+          let x = Math.random() * canvas.width;
+          let y = Math.random() * canvas.height;
+          particleArray.push(new Particle(x, y));
+        }
+      }
+
+      function animateParticles() {
+        if (!ctx) return; // التأكد من وجود السياق
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particleArray.length; i++){
+          particleArray[i].update();
+        }
+        requestAnimationFrame(animateParticles);
+      }
+
+      // تهيئة وبدء التحريك
+      initParticles();
+      animateParticles();
+
+      // إعادة التهيئة عند تغيير الحجم
+      window.addEventListener('resize', () => {
+          clearTimeout(window.resizeTimeout);
+          window.resizeTimeout = setTimeout(() => {
+              resizeCanvas();
+              initParticles();
+          }, 250);
+      });
+  } // نهاية التحقق من وجود canvas
+
+  // --- التشغيل الأولي ---
+  gsap.delayedCall(0.1, () => {
+       if(sections.length > 0) { // التحقق من وجود أقسام
+         updateActiveSection(0);
+         animateSectionElements(sections[0]);
+       }
+  });
+
+}); // نهاية DOMContentLoaded
+
+  </script>
+</body>
+</html>
